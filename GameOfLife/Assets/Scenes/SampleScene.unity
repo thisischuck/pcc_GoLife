@@ -164,7 +164,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellParent: {fileID: 651247383511188621, guid: 182d6b40fc91d944f826dc5ecccfadfb, type: 3}
   gridSize: {x: 250, y: 250}
-  mutationPercentage: 0
+  isDrawing: 1
+  threads: 2
+  mutationPercentage: 5
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0

@@ -1,11 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading;
+using System.Threading.Tasks;
 
 public class GameOfLife : MonoBehaviour
 {
     public GameObject cellParent;
     public Vector2 gridSize;
+    public bool isDrawing;
+    [Tooltip("1- Threads, 2- Tasks, Default-No Threads")]
+    public int threads;
+    [HideInInspector]
     [Range(0, 100)]
     public int mutationPercentage;
 
@@ -14,20 +20,15 @@ public class GameOfLife : MonoBehaviour
 
     private GameObject[,] objectsArray;
     private int[,] cellArray;
+
+    private int frameCount = 0;
+    private float timePassed = 0;
     // Start is called before the first frame update
     void Start()
     {
         gridWitdh = (int)gridSize.x;
         gridHeight = (int)gridSize.y;
         CreateGame();
-
-        this.GetComponent<Camera>().orthographicSize = gridWitdh;
-    }
-
-    void Update()
-    {
-        GameLoop();
-        DrawBoard();
     }
 
     void CreateGame()
@@ -35,6 +36,80 @@ public class GameOfLife : MonoBehaviour
         cellArray = new int[gridWitdh, gridHeight];
         objectsArray = new GameObject[gridWitdh, gridHeight];
         FillArray(cellArray, gridWitdh, gridHeight);
+    }
+
+    void Update()
+    {
+        switch (threads)
+        {
+            case 1:
+                UpdateThread();
+                break;
+            case 2:
+                UpdateTask();
+                break;
+            default:
+                UpdateNoThread();
+                break;
+        }
+
+        if (isDrawing) DrawBoard();
+        frameCount++;
+        timePassed += Time.deltaTime;
+        if (timePassed > 1)
+        {
+            Debug.Log("Framerate " + frameCount);
+            frameCount = 0;
+            timePassed = 0;
+        }
+    }
+
+    void UpdateNoThread()
+    {
+        GameLoop();
+
+        Debug.Log("Main Iteration");
+    }
+
+    void UpdateTask()
+    {
+        var listThreads = new List<Task>();
+        int[,] temp = (int[,])cellArray.Clone();
+        for (int x = 0; x < 10; x++)
+            for (int y = 0; y < 10; y++)
+            {
+                Vector2Int a = new Vector2Int(x, y);
+                var t = Task.Run(() =>
+                {
+                    GameLoopThreads(a, temp);
+                });
+                listThreads.Add(t);
+            }
+
+        foreach (var t in listThreads) t.Wait();
+
+        Debug.Log("Task Iteration");
+    }
+
+    void UpdateThread()
+    {
+        var listThreads = new List<Thread>();
+        int[,] temp = (int[,])cellArray.Clone();
+        for (int x = 0; x < 10; x++)
+            for (int y = 0; y < 10; y++)
+            {
+                Vector2Int a = new Vector2Int(x, y);
+                var t = new Thread(() =>
+                {
+                    GameLoopThreads(a, temp);
+                });
+                t.Start();
+                listThreads.Add(t);
+            }
+
+        foreach (var t in listThreads) t.Join();
+
+        Debug.Log("Thread Iteration");
     }
 
     void DrawBoard()
@@ -64,9 +139,23 @@ public class GameOfLife : MonoBehaviour
             }
     }
 
-    void GameLoopThreads()
+    void GameLoopThreads(Vector2Int id, int[,] a)
     {
+        Vector2Int start = new Vector2Int(
+            id.x * gridWitdh / 10,
+            id.y * gridHeight / 10
+        );
+        Vector2Int end = new Vector2Int(
+            (id.x + 1) * gridWitdh / 10,
+            (id.y + 1) * gridHeight / 10
+        );
+        Debug.Log(id + " " + start + " " + end);
 
+        for (int i = start.x; i < end.x; i++)
+            for (int j = start.y; j < end.y; j++)
+            {
+                cellArray[i, j] = DeadOrAlive(i, j, a);
+            }
     }
 
     void GameLoop()
@@ -75,15 +164,6 @@ public class GameOfLife : MonoBehaviour
 
         for (int i = 0; i < gridWitdh; i++)
             for (int j = 0; j < gridHeight; j++)
-            {
-                cellArray[i, j] = DeadOrAlive(i, j, (int[,])temp);
-            }
-    }
-
-    void A(Vector2 start, Vector2 end, int[,] temp)
-    {
-        for (int i = (int)start.x; i < end.x; i++)
-            for (int j = (int)start.y; j < end.y; j++)
             {
                 cellArray[i, j] = DeadOrAlive(i, j, (int[,])temp);
             }
@@ -118,8 +198,8 @@ public class GameOfLife : MonoBehaviour
         // Abs(- 1) = 1
         // Viva: Abs(1 - 1) = 0
         // Morta: Abs(0 - 1) = 1
-        if (Random.Range(0, 100) < mutationPercentage)
-            return Mathf.Abs(cellArray[x, y] - 1);
+        /*if (Random.Range(0, 100) < mutationPercentage)
+            return Mathf.Abs(cellArray[x, y] - 1);*/
         return cellArray[x, y];
     }
 
