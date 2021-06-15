@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 public class GameOfLife : MonoBehaviour
 {
     public GameObject cellParent;
+    public GameObject cellHolder;
     public Vector2 gridSize;
     public bool isDrawing;
     [Tooltip("1- Threads, 2- Tasks, Default-No Threads")]
@@ -23,12 +24,31 @@ public class GameOfLife : MonoBehaviour
 
     private int frameCount = 0;
     private float timePassed = 0;
+
+    #region ComputeShader
+
+    public ComputeShader computeShader;
+    public RenderTexture result;
+
+    public GameObject plane;
+
+    int k;
+    #endregion
+
     // Start is called before the first frame update
     void Start()
     {
+        k = computeShader.FindKernel("CSMain");
         gridWitdh = (int)gridSize.x;
         gridHeight = (int)gridSize.y;
         CreateGame();
+
+        result = new RenderTexture(gridWitdh, gridHeight, 1);
+        result.enableRandomWrite = true;
+        result.filterMode = FilterMode.Point;
+        result.Create();
+        computeShader.SetTexture(k, "Result", result);
+        computeShader.SetFloat("height", gridHeight);
     }
 
     void CreateGame()
@@ -53,7 +73,12 @@ public class GameOfLife : MonoBehaviour
                 break;
         }
 
-        if (isDrawing) DrawBoard();
+        if (isDrawing)
+        {
+            //DrawBoard();
+            DrawTexture();
+        }
+
         frameCount++;
         timePassed += Time.deltaTime;
         if (timePassed > 1)
@@ -112,6 +137,18 @@ public class GameOfLife : MonoBehaviour
         Debug.Log("Thread Iteration");
     }
 
+    void DrawTexture()
+    {
+        var c = new ComputeBuffer(gridWitdh * gridHeight, sizeof(int));
+        c.SetData(cellArray);
+
+        computeShader.SetBuffer(k, "buffer", c);
+        computeShader.Dispatch(k, gridWitdh / 8, gridHeight / 8, 1);
+
+        plane.GetComponent<MeshRenderer>().material.mainTexture = result;
+        c.Release();
+    }
+
     void DrawBoard()
     {
         int nCells = gridHeight * gridWitdh;
@@ -131,7 +168,7 @@ public class GameOfLife : MonoBehaviour
                         j,
                         0
                     );
-                    var g = GameObject.Instantiate(cellParent, pos, transform.rotation, transform);
+                    var g = GameObject.Instantiate(cellParent, pos, transform.rotation, cellHolder.transform);
                     g.GetComponent<SpriteRenderer>().color = cellArray[i, j] == 1 ? Color.red : Color.black;
                     objectsArray[i, j] = g;
                 }
