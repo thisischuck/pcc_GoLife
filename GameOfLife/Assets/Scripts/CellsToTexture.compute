@@ -4,16 +4,52 @@
 // Create a RenderTexture with enableRandomWrite flag and set it
 // with cs.SetTexture
 RWTexture2D<float4> Result;
-float height;
-RWStructuredBuffer<int> buffer;
+RWTexture2D<float4> Start;
+float2 size;
+
+int Alive(float2 id)
+{
+    if (id.x > 0 && id.x < size.x)
+    {
+        if (id.y > 0 && id.y < size.y)
+        {
+            return Start[id.xy].x;
+        }        
+    }
+    return -1;
+}
+
+int CheckAlive(float2 id)
+{
+    int count = 0;
+    for (int i = -1; i <= 1; i++)
+    {
+        for (int j = -1; j <= 1; j++)
+        {
+            if (i == 0 && j == 0) continue;
+            if (Alive(float2(id.x + i, id.y + j)) != -1) count++;
+        }
+    }
+
+    if (count > 3 || count < 2)
+        return 0;
+    else if (count == 3) return 1;
+    else return -1;
+}
+
+
+float4 CellToColor(float4 cell, int alive){
+    if(alive == 1)
+        return float4(1,0,0,1);
+    else if(alive == 0)
+        return float4(0,0,1,0);
+    else 
+        return float4(1,0,1,-1);
+}
 
 [numthreads(8,8,1)]
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
-    int location = id.x * height + id.y;
-    int c = buffer.Load(location);
-
-    Result[id.xy] = float4(c,0,0,0);
-
-    // TODO: insert actual code here!
+    int c = CheckAlive(id.xy);
+    Result[id.xy] = CellToColor(Start[id.xy], c);
 }

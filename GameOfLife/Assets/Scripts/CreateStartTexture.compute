@@ -1,0 +1,36 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+#define RED float4(1,0,0,0)
+#define BLACK float4(0,0,0,0)
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWTexture2D<float4> Result;
+
+
+uint rng_state_x;
+uint rng_state_y;
+uint rand(uint s)
+{
+    uint state = s;
+    s = s * 747796405u + 2891336453u;
+    uint word = ((state >> ((state >> 28u) + 4u)) ^ state) * 277803737u;
+    return (word >> 22u) ^ word;
+}
+
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    rng_state_x = id.x;
+    rng_state_y = id.y;
+
+    float r = float(rand(rng_state_x)) * (1.0 / 4294967296.0);
+    float r2 = float(rand(rng_state_x)) * (1.0 / 4294967296.0);
+    float r3 = float(rand(rng_state_x)) * (1.0 / 4294967296.0);
+    float g = float(rand(rng_state_y)) * (1.0 / 4294967296.0);
+    float g2 = float(rand(rng_state_y)) * (1.0 / 4294967296.0);
+    float g3 = float(rand(rng_state_y)) * (1.0 / 4294967296.0);
+    
+    float c = min(r*g2*r3, g*r2*g3);
+    Result[id.xy] = c > 0.3 ? RED : BLACK;
+}
