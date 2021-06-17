@@ -62,16 +62,8 @@ public class GameOfLife : MonoBehaviour
 
         result = SetupRenderTexture();
         lifeShader.SetTexture(k, "Start", start);
-        lifeShader.SetFloat("mutPercentage", mutationPercentage);
         lifeShader.SetTexture(k, "Result", result);
-    }
-
-    void DrawTexture()
-    {
-        lifeShader.SetTexture(k, "Start", start);
-        lifeShader.Dispatch(k, gridWitdh / 8, gridHeight / 8, 1);
-
-        plane.GetComponent<MeshRenderer>().material.mainTexture = result;
+        lifeShader.SetFloat("mutPercentage", mutationPercentage);
 
         copyShader.SetTexture(
             k,
@@ -84,6 +76,13 @@ public class GameOfLife : MonoBehaviour
             "Source",
             result
         );
+    }
+
+    void DrawTexture()
+    {
+        lifeShader.Dispatch(k, gridWitdh / 8, gridHeight / 8, 1);
+
+        plane.GetComponent<MeshRenderer>().material.mainTexture = result;
 
         copyShader.Dispatch(k, gridWitdh / 8, gridHeight / 8, 1);
     }
