@@ -22,27 +22,28 @@ int Alive(float2 id)
 int CheckAlive(float2 id)
 {
     int count = 0;
+    int state = Start[id.xy].x;
     for (int i = -1; i <= 1; i++)
     {
         for (int j = -1; j <= 1; j++)
         {
             if (i == 0 && j == 0) continue;
-            if (Alive(float2(id.x + i, id.y + j)) != -1) count++;
+            if (Alive(float2(id.x + i, id.y + j)) == 1) count++;
         }
     }
 
     if (count > 3 || count < 2)
         return 0;
     else if (count == 3) return 1;
-    else return -1;
+    else return state;
 }
 
 
 float4 CellToColor(float4 cell, int alive){
     if(alive == 1)
-        return float4(1,0,0,1);
+        return float4(1,1,1,1);
     else if(alive == 0)
-        return float4(0,0,1,0);
+        return float4(0,0,0,0);
     else 
         return float4(1,0,1,-1);
 }

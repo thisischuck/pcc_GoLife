@@ -162,11 +162,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 388b277c46706084bb8bcc50be342c84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridSize: {x: 256, y: 256}
+  gridSize: {x: 1920, y: 1080}
   isDrawing: 0
   mutationPercentage: 5
   lifeShader: {fileID: 7200000, guid: 062c21ccc313a6d47875ddee0507972f, type: 3}
   startShader: {fileID: 7200000, guid: e7b453c11fc3a364395806ced55aadd1, type: 3}
+  copyShader: {fileID: 7200000, guid: 7c033499028b0ea48bd707d7a63e0033, type: 3}
   result: {fileID: 0}
   start: {fileID: 0}
   plane: {fileID: 1454061956}
@@ -197,7 +198,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 100
+  orthographic size: 46.4
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -304,7 +305,7 @@ Transform:
   m_GameObject: {fileID: 1454061956}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 10, y: 1, z: 10}
+  m_LocalScale: {x: 16, y: 1, z: 9}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1

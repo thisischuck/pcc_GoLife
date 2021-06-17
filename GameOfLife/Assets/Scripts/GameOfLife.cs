@@ -22,6 +22,7 @@ public class GameOfLife : MonoBehaviour
 
     public ComputeShader lifeShader;
     public ComputeShader startShader;
+    public ComputeShader copyShader;
     public RenderTexture result;
     public RenderTexture start;
 
@@ -55,8 +56,8 @@ public class GameOfLife : MonoBehaviour
         lifeShader.SetFloats("size", gridWitdh, gridWitdh);
         start = SetupRenderTexture();
 
-        startShader.SetTexture(startShader.FindKernel("CSMain"), "Result", start);
-        startShader.Dispatch(startShader.FindKernel("CSMain"), gridWitdh / 8, gridHeight / 8, 1);
+        startShader.SetTexture(k, "Result", start);
+        startShader.Dispatch(k, gridWitdh / 8, gridHeight / 8, 1);
         plane.GetComponent<MeshRenderer>().material.mainTexture = start;
 
         result = SetupRenderTexture();
@@ -66,22 +67,35 @@ public class GameOfLife : MonoBehaviour
 
     void DrawTexture()
     {
-        /*lifeShader.SetTexture(k, "Start", start);
-        lifeShader.SetTexture(k, "Result", result);*/
+        lifeShader.SetTexture(k, "Start", start);
         lifeShader.Dispatch(k, gridWitdh / 8, gridHeight / 8, 1);
+
         plane.GetComponent<MeshRenderer>().material.mainTexture = result;
-        //start = result;
+
+        copyShader.SetTexture(
+            k,
+            "Dest",
+            start
+        );
+
+        copyShader.SetTexture(
+            k,
+            "Source",
+            result
+        );
+
+        copyShader.Dispatch(k, gridWitdh / 8, gridHeight / 8, 1);
     }
 
     void Update()
     {
+        if (isDrawing)
+            DrawTexture();
 
         frameCount++;
         timePassed += Time.deltaTime;
         if (timePassed > 1)
         {
-            if (isDrawing)
-                DrawTexture();
             //Debug.Log("Framerate " + frameCount);
             frameCount = 0;
             timePassed = 0;
