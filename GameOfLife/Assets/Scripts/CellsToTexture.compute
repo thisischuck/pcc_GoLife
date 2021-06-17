@@ -6,6 +6,17 @@
 RWTexture2D<float4> Result;
 RWTexture2D<float4> Start;
 float2 size;
+float mutPercentage;
+
+uint randState;
+uint rand(uint s)
+{
+    uint state = s;
+    s = s * 747796405u + 2891336453u;
+    uint word = ((state >> ((state >> 28u) + 4u)) ^ state) * 277803737u;
+    return (word >> 22u) ^ word;
+}
+
 
 int Alive(float2 id)
 {
@@ -21,6 +32,7 @@ int Alive(float2 id)
 
 int CheckAlive(float2 id)
 {
+    bool changed = false;
     int count = 0;
     int state = Start[id.xy].x;
     for (int i = -1; i <= 1; i++)
@@ -33,9 +45,22 @@ int CheckAlive(float2 id)
     }
 
     if (count > 3 || count < 2)
-        return 0;
-    else if (count == 3) return 1;
-    else return state;
+    {
+        state = 0;
+        changed = true;
+    }
+    else if (count == 3) 
+    {
+        state = 1;
+        changed = true;
+    }
+    
+    float r = float(rand(randState)) * (1.0 / 4294967296.0);
+
+    if(r < mutPercentage && changed)
+        state = state == 0 ? 1: 0;
+
+    return state;
 }
 
 
@@ -51,6 +76,7 @@ float4 CellToColor(float4 cell, int alive){
 [numthreads(8,8,1)]
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
+    randState = (id.y * id.x) >> (id.x && id.y);
     int c = CheckAlive(id.xy);
     Result[id.xy] = CellToColor(Start[id.xy], c);
 }

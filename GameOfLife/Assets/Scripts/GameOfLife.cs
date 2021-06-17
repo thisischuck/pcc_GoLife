@@ -9,8 +9,8 @@ public class GameOfLife : MonoBehaviour
 {
     public Vector2 gridSize;
     public bool isDrawing;
-    [Range(0, 100)]
-    public int mutationPercentage;
+    [Range(0, 1)]
+    public float mutationPercentage;
 
     private int gridWitdh;
     private int gridHeight;
@@ -62,6 +62,7 @@ public class GameOfLife : MonoBehaviour
 
         result = SetupRenderTexture();
         lifeShader.SetTexture(k, "Start", start);
+        lifeShader.SetFloat("mutPercentage", mutationPercentage);
         lifeShader.SetTexture(k, "Result", result);
     }
 

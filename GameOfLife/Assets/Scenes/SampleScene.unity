@@ -162,9 +162,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 388b277c46706084bb8bcc50be342c84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridSize: {x: 1920, y: 1080}
+  gridSize: {x: 15360, y: 8640}
   isDrawing: 0
-  mutationPercentage: 5
+  mutationPercentage: 0.01
   lifeShader: {fileID: 7200000, guid: 062c21ccc313a6d47875ddee0507972f, type: 3}
   startShader: {fileID: 7200000, guid: e7b453c11fc3a364395806ced55aadd1, type: 3}
   copyShader: {fileID: 7200000, guid: 7c033499028b0ea48bd707d7a63e0033, type: 3}
@@ -240,7 +240,7 @@ GameObject:
   - component: {fileID: 1454061959}
   - component: {fileID: 1454061958}
   m_Layer: 0
-  m_Name: Plane
+  m_Name: Plane_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
