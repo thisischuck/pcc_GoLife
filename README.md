@@ -2,8 +2,8 @@
 Game of Life Implementation
 
 Single threaded
-Multi threaded using 
-  -> user generated Threads
+Multi threaded using
+\n-> user generated Threads
   -> c# Tasks
   -> Compute Shaders
   
