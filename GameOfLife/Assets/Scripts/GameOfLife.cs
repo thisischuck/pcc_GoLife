@@ -16,6 +16,8 @@ public class GameOfLife : MonoBehaviour
     [Range(0, 100)]
     public int mutationPercentage;
 
+    public int threadCount = 10;
+
     private int gridWitdh;
     private int gridHeight;
 
@@ -100,8 +102,8 @@ public class GameOfLife : MonoBehaviour
     {
         var listThreads = new List<Task>();
         int[,] temp = (int[,])cellArray.Clone();
-        for (int x = 0; x < 10; x++)
-            for (int y = 0; y < 10; y++)
+        for (int x = 0; x < threadCount; x++)
+            for (int y = 0; y < threadCount; y++)
             {
                 Vector2Int a = new Vector2Int(x, y);
                 var t = Task.Run(() =>
@@ -120,8 +122,8 @@ public class GameOfLife : MonoBehaviour
     {
         var listThreads = new List<Thread>();
         int[,] temp = (int[,])cellArray.Clone();
-        for (int x = 0; x < 10; x++)
-            for (int y = 0; y < 10; y++)
+        for (int x = 0; x < threadCount; x++)
+            for (int y = 0; y < threadCount; y++)
             {
                 Vector2Int a = new Vector2Int(x, y);
                 var t = new Thread(() =>
@@ -179,12 +181,12 @@ public class GameOfLife : MonoBehaviour
     void GameLoopThreads(Vector2Int id, int[,] a)
     {
         Vector2Int start = new Vector2Int(
-            id.x * gridWitdh / 10,
-            id.y * gridHeight / 10
+            id.x * gridWitdh / threadCount,
+            id.y * gridHeight / threadCount
         );
         Vector2Int end = new Vector2Int(
-            (id.x + 1) * gridWitdh / 10,
-            (id.y + 1) * gridHeight / 10
+            (id.x + 1) * gridWitdh / threadCount,
+            (id.y + 1) * gridHeight / threadCount
         );
         Debug.Log(id + " " + start + " " + end);
 
