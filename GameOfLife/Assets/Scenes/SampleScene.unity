@@ -194,10 +194,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellParent: {fileID: 651247383511188621, guid: 182d6b40fc91d944f826dc5ecccfadfb, type: 3}
   cellHolder: {fileID: 123320704}
-  gridSize: {x: 1920, y: 1080}
+  gridSize: {x: 256, y: 256}
   isDrawing: 1
   threads: 2
   mutationPercentage: 5
+  threadCount: 10
   computeShader: {fileID: 7200000, guid: 062c21ccc313a6d47875ddee0507972f, type: 3}
   result: {fileID: 0}
   plane: {fileID: 1454061956}
