@@ -14,9 +14,9 @@ For a school report about performance.
 
 ## Project Organization
 Using a git client any user is able to interact with the different versions of this implementation.\
-The following versions are:\
+The following versions are:
 ***main***
-1. CPU implementation composed of\
+1. CPU implementation composed of
    - Game Of Life (Script) located on Main Camera object
      - Grid Size
      - Thread Selection
@@ -34,10 +34,10 @@ The following versions are:\
 ***gpu-more-planes***
 1. GPU implementation of
     - Game Of Life (Script) located on Main Camera object
-      - 64K resolution*
+      - 64K resolution**
       - Mutation level switchable
 
-** Pseudo 64K resolution, using 4 16K resolution planes.
+** Pseudo 64K resolution, using four 16K resolution planes.
 
 
 
