@@ -12,7 +12,7 @@ Multi threaded using\
 Game of Life implemented in Unity3d. It contains 2 types of examples exploring threads and compute shaders.\
 For a school report about performance.
 
-## Project Organization
+## Project Orientation
 Using a git client any user is able to interact with the different versions of this implementation.\
 The following versions are:
 
