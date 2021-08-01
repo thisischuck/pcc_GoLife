@@ -7,9 +7,8 @@ Multi threaded using\
   -> c# Tasks\
   -> Compute Shaders
 
- "
 
 ## Abstract
-Game of Life implemented in Unity3d. It contains 2 types of examples exploring threads and compute shaders.
+Game of Life implemented in Unity3d. It contains 2 types of examples exploring threads and compute shaders.\
 For a school report about performance.
 
