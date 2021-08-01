@@ -18,26 +18,26 @@ The following versions are:\
 ***main***
 1. CPU implementation composed of\
    - Game Of Life (Script) located on Main Camera object
-    - Grid Size
-    - Thread Selection
-     - Single Thread (0)
-     - Threads (1)
-     - Tasks (2)
-    - Thread Count
+     - Grid Size
+     - Thread Selection
+       - Single Thread (0)
+       - Threads (1)
+       - Tasks (2)
+     - Thread Count
 
 ***only_gpu***
 1. GPU implementation of
     - Game Of Life (Script) located on Main Camera object
-     - 16K resolution
-     - Mutation level switchable
+      - 16K resolution
+      - Mutation level switchable
 
 ***gpu-more-planes***
 1. GPU implementation of
     - Game Of Life (Script) located on Main Camera object
-     - 64K resolution*
-     - Mutation level switchable
+      - 64K resolution*
+      - Mutation level switchable
 
-* Pseudo 64K resolution, using 4 16K resolution planes.
+** Pseudo 64K resolution, using 4 16K resolution planes.
 
 
 
