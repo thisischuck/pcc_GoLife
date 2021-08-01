@@ -14,7 +14,7 @@ For a school report about performance.
 
 ## Project Organization
 Using a git client any user is able to interact with the different versions of this implementation.\
-The following versions are:\
+The following versions are:
 
 ***main***
 1. CPU implementation composed of
